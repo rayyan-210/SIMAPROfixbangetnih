@@ -1,19 +1,5 @@
-<?php
-require_once 'Database.php';
-$produk = query("SELECT * FROM produk");
-$produk_berdasarkan_jenis = [];
-
-foreach ($produk as $row) {
-  $jenis = strtolower($row['jenis']);
-  if (!isset($produk_berdasarkan_jenis[$jenis])) {
-    $produk_berdasarkan_jenis[$jenis] = [];
-  }
-  $produk_berdasarkan_jenis[$jenis][] = $row;
-}
-?>
-
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8" />
@@ -21,19 +7,17 @@ foreach ($produk as $row) {
   <title>RIN'S Store</title>
   <link rel="website icon" type="image/jpeg" href="AsetFoto/Login/rins_logo.png">
   <link rel="stylesheet" href="css/tailwind.css">
-  <script src="js\SIMASTOK.js" defer></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class="bg-gradient-to-b from-red-900 to-red-800 text-white font-sans scroll-smooth">
-  <!--navbar-->
+<body class="bg-red-800 text-white font-sans scroll-smooth">
+  <!-- Navbar -->
   <nav class="bg-red-700 p-4 flex justify-between items-center  top-0 z-50">
     <img src="./AsetFoto/Produk/LOGO_RINS.png" class="w-28 h-10" />
-    <div class="header">
-      <div class="flex space-x-10">
-        <a href="#home" class="hover:text-amber-300 px-3 py-2 rounded-md text-xl font-medium">Home</a>
-        <a href="#produk" class="hover:text-amber-300 px-3 py-2 rounded-md text-xl font-medium">Produk</a>
-        <a href="#about" class="hover:text-amber-300 px-3 py-2 rounded-md text-xl font-medium">About</a>
-      </div>
+    <div class="flex space-x-10">
+      <a href="#home" class="hover:text-yellow-300">Home</a>
+      <a href="#produk" class="hover:text-yellow-300">Produk</a>
+      <a href="#about" class="hover:text-yellow-300">About</a>
     </div>
     <div>
       <button class="bg-gray-200 text-red-700 rounded-full p-2">
@@ -43,130 +27,117 @@ foreach ($produk as $row) {
   </nav>
 
   <!-- Beranda - Carousel -->
-  <?php
-  // Query untuk mendapatkan gambar dari database jika upload bernilai true
-  $sql = "SELECT id_promosi, gambar FROM promosi WHERE uploud = 1 ORDER BY id_promosi DESC";
-  $result = mysqli_query($conn, $sql);
-
-  $slides = [];
-  if (mysqli_num_rows($result) > 0) {
-    while ($row = mysqli_fetch_assoc($result)) {
-      $slides[] = [
-        'id' => $row['id_promosi'],
-        'image' => 'AsetFoto/carousel/' . htmlspecialchars($row['gambar'], ENT_QUOTES, 'UTF-8')
-      ];
-    }
-  } else {
-    // Handle case where there are no images
-    $slides = [];
-  }
-  ?>
-
-  <section id="home" class="w-full ">
+  <section id="home" class="w-full bg-gray-900">
     <div class="p-16">
-      <div class="max-w-4xl mx-auto relative rounded-lg  bg-red-700 p-8">
-        <div class="relative w-full">
-          <!-- Carousel wrapper -->
-          <div class="flex justify-center items-center mb-2 h-[450px] w-full">
-            <?php foreach ($slides as $index => $slide): ?>
-              <div class="slide" style="display: <?php echo $index === 0 ? 'block' : 'none'; ?>;">
-                <img src="<?php echo $slide['image']; ?>"
-                  class="flex w-full h-[400px] max-w-2xl object- rounded-lg items-center shadow-lg transition-transform duration-500 ease-in-out transform hover:scale-105"
-                  alt="Promotional Image ID: <?php echo $slide['id']; ?>">
-              </div>
-            <?php endforeach; ?>
+      <div
+        class="max-w-4xl mx-auto relative"
+        x-data="{
+                activeSlide: 1,
+                slides: [
+                { id: 1, image: './AsetFoto/carousel/BARCA.png', title: 'Hello 1', body: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit.'},
+                { id: 2, image: './AsetFoto/carousel/carousel 2.jpg', title: 'Hello 2', body: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit.'},
+                { id: 3, image: './AsetFoto/carousel/carousel 3.jpg', title: 'Hello 3', body: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit.'},
+                { id: 4, image: './AsetFoto/carousel/carousel 4.jpg', title: 'Hello 4', body: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit.'},
+                { id: 5, image: './AsetFoto/carousel/carousel 5.jpg', title: 'Hello 5', body: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit.'},
+                ],
+                loop(){
+                    setInterval(() => {this.activeSlide = this.activeSlide === 5 ? 1 : this.activeSlide + 1}, 3000)
+                }
+            
+            
+            }"
+        x-init="loop">
+        <!---data loop -->
+        <div class="relative w-full h-80 flex items-center justify-center bg-slate-500 text-white rounded-lg">
+          <template x-for="slide in slides" :key="slide.id">
+            <div x-show="activeSlide === slide.id" class="p-8 md:p-24 h-80 flex items-center bg-slate-500 text-white rounded-lg">
+              <img :src="slide.image" alt="Slide Image" class="w-full max-h-96 object-cover rounded-lg" />
+            </div>
+          </template>
+
+          <!-- Back/Next Buttons -->
+          <div class="absolute inset-0 flex items-center justify-between px-4">
+            <!-- Back Button -->
+            <button
+              x-on:click="activeSlide = activeSlide === 1 ? slides.length : activeSlide - 1"
+              class="bg-slate-100 text-slate-500 hover:bg-blue-500 hover:text-white transition font-bold rounded-full w-12 h-12 shadow flex justify-center items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+              </svg>
+            </button>
+
+            <!-- Next Button -->
+            <button
+              x-on:click="activeSlide = activeSlide === slides.length ? 1 : activeSlide + 1"
+              class="bg-slate-100 text-slate-500 hover:bg-blue-500 hover:text-white transition font-bold rounded-full w-12 h-12 shadow flex justify-center items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+              </svg>
+            </button>
           </div>
-
         </div>
-        <div id="activeSlide"></div>
 
-        <!-- Slider controls -->
-        <button type="button" class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer" onclick="prevSlide()">
-          <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-600/30 hover:bg-amber-300">
-            <svg class="w-4 h-4 text-black " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />
-            </svg>
-            <span class="sr-only">Previous</span>
-          </span>
-        </button>
-        <button type="button" class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer" onclick="nextSlide()">
-          <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-600/30 hover:bg-amber-300">
-            <svg class="w-4 h-4 text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
-            </svg>
-            <span class="sr-only">Next</span>
-          </span>
-        </button>
+
+        <div class="absolute w-full flex items-center justify-center px-4">
+          <template x-for="slide in slides" :key="slide.id">
+            <button
+              class="flex-1 w-4 h-2 mt-4 mx-2 mb-2 rounded-full overflow-hidden transition-colors duration-200 ease-out hover:bg-slate-600 hover:shadow-lg"
+              :class="{
+                'bg-blue-600' : activeSlide === slide.id,
+                'bg-grey-300' : activeSlide !== slide.id,
+              }"
+              x-on:click="activeSlide = slide.id"></button>
+          </template>
+        </div>
       </div>
     </div>
   </section>
+
   <!-- Produk Section -->
-  <section id="produk" class="py-16">
-    <div class="text-center mb-12">
-      <h1 class="text-4xl font-bold capitalize text-gray-100 tracking-wide">
-        RIN's
-        <span
-          class="relative px-6 py-2 bg-yellow-500 text-black font-semibold uppercase rounded-md shadow-lg transition-transform transform group duration-300 ease-in-out hover:scale-110">
-          produk
-          <span
-            class="absolute inset-0 w-full h-full rounded-md bg-yellow-300 opacity-20 blur-md -z-10 transition duration-300 group-hover:opacity-50 group-hover:blur-lg">
-          </span>
-          <span
-            class="absolute inset-0 border-4 border-yellow-500 rounded-md scale-95 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300">
-          </span>
-        </span>
-      </h1>
+  <section id="produk" class="py-8 bg-red-900">
+    <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div class="bg-red-700 p-4 rounded-lg text-center">
+        <img src="./AsetFoto/Produk/Produk 1 kanzler crispy chicken nugget.jpg" alt="Product" class="w-full h-40 object-cover rounded-md" />
+        <h2 class="text-lg mt-2">KANZLER NUGET SPICY</h2>
+        <p class="text-yellow-400 font-bold">Rp. 43.500</p>
+        <button class="bg-yellow-500 text-red-800 py-2 px-4 mt-2 rounded-full font-semibold">BUY</button>
+      </div>
+      <div class="bg-red-700 p-4 rounded-lg text-center">
+        <img src="./AsetFoto/Produk/Produk 1 kanzler crispy chicken nugget.jpg" alt="Product" class="w-full h-40 object-cover rounded-md" />
+        <h2 class="text-lg mt-2">KANZLER NUGET SPICY</h2>
+        <p class="text-yellow-400 font-bold">Rp. 43.500</p>
+        <button class="bg-yellow-500 text-red-800 py-2 px-4 mt-2 rounded-full font-semibold">BUY</button>
+      </div>
+      <div class="bg-red-700 p-4 rounded-lg text-center">
+        <img src="./AsetFoto/Produk/Produk 1 kanzler crispy chicken nugget.jpg" alt="Product" class="w-full h-40 object-cover rounded-md" />
+        <h2 class="text-lg mt-2">KANZLER NUGET SPICY</h2>
+        <p class="text-yellow-400 font-bold">Rp. 43.500</p>
+        <button class="bg-yellow-500 text-red-800 py-2 px-4 mt-2 rounded-full font-semibold">BUY</button>
+      </div>
+      <div class="bg-red-700 p-4 rounded-lg text-center">
+        <img src="./AsetFoto/Produk/Produk 1 kanzler crispy chicken nugget.jpg" alt="Product" class="w-full h-40 object-cover rounded-md" />
+        <h2 class="text-lg mt-2">KANZLER NUGET SPICY</h2>
+        <p class="text-yellow-400 font-bold">Rp. 43.500</p>
+        <button class="bg-yellow-500 text-red-800 py-2 px-4 mt-2 rounded-full font-semibold">BUY</button>
+      </div>
+      <div class="bg-red-700 p-4 rounded-lg text-center">
+        <img src="./AsetFoto/Produk/Produk 1 kanzler crispy chicken nugget.jpg" alt="Product" class="w-full h-40 object-cover rounded-md" />
+        <h2 class="text-lg mt-2">KANZLER NUGET SPICY</h2>
+        <p class="text-yellow-400 font-bold">Rp. 43.500</p>
+        <button class="bg-yellow-500 text-red-800 py-2 px-4 mt-2 rounded-full font-semibold">BUY</button>
+      </div>
+      <div class="bg-red-700 p-4 rounded-lg text-center">
+        <img src="./AsetFoto/Produk/Produk 1 kanzler crispy chicken nugget.jpg" alt="Product" class="w-full h-40 object-cover rounded-md" />
+        <h2 class="text-lg mt-2">KANZLER NUGET SPICY</h2>
+        <p class="text-yellow-400 font-bold">Rp. 43.500</p>
+        <button class="bg-yellow-500 text-red-800 py-2 px-4 mt-2 rounded-full font-semibold">BUY</button>
+      </div>
+      <!-- Duplikat elemen ini untuk produk lainnya -->
     </div>
-
-    <div class="max-w-6xl mx-auto gap-6">
-    <?php foreach ($produk_berdasarkan_jenis as $jenis => $produk) : ?>
-      <span
-          class="relative px-6 py-2 bg-yellow-500 text-black font-semibold uppercase rounded-md shadow-lg transition-transform transform group duration-300 ease-in-out hover:scale-110">
-          <?= htmlspecialchars($jenis); ?>
-          <span
-            class="absolute inset-0 w-full h-full rounded-md bg-yellow-300 opacity-20 blur-md -z-10 transition duration-300 group-hover:opacity-50 group-hover:blur-lg">
-          </span>
-          <span
-            class="absolute inset-0 border-4 border-yellow-500 rounded-md scale-95 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300">
-          </span>
-        </span>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"> 
-            <?php foreach ($produk as $row) : ?>
-                <div class="bg-red-700 p-4 rounded-lg text-center mb-4"> 
-                    <img src="AsetFoto/Catalog/<?= htmlspecialchars($row["gambar"]); ?>" alt="Product" class="w-full h-40 object-cover rounded-md" />
-                    <h3 class="text-lg mt-2"><?= htmlspecialchars($row["nama"]); ?></h3>
-                    <p class="text-yellow-400 font-bold">Rp <?= number_format($row["harga"], 0, ',', '.') ?></p>
-                    <button class="bg-yellow-500 hover:scale-125 duration-300 scale-100 transition-all text-red-800 py-2 px-4 mt-2 rounded-full font-semibold"
-                        onclick="sendToWhatsApp('<?= htmlspecialchars($row['id']); ?>', '<?= htmlspecialchars($row['nama']); ?>', <?= $row['harga']; ?>)">BUY</button>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    <?php endforeach; ?>
-</div>
-
   </section>
 
   <!-- Footer -->
   <footer id="about" class="bg-black py-8 mt-8">
-    <div class="text-center mb-12">
-      <h1 class="text-4xl font-bold capitalize text-gray-100 tracking-wide">
-        RIN's
-        <span
-          class="relative px-6 py-2 bg-yellow-500 text-black font-semibold uppercase rounded-md shadow-lg transition-transform transform group duration-300 ease-in-out hover:scale-110">
-          ABOUT
-          <span
-            class="absolute inset-0 w-full h-full rounded-md bg-yellow-300 opacity-20 blur-md -z-10 transition duration-300 group-hover:opacity-50 group-hover:blur-lg">
-          </span>
-          <span
-            class="absolute inset-0 border-4 border-yellow-500 rounded-md scale-95 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300">
-          </span>
-        </span>
-      </h1>
-    </div>
-
-
-
-
     <div class="max-w-4xl mx-auto flex justify-between items-center space-x-10">
       <div>
         <h3 class="text-lg font-semibold">Contact Details</h3>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 29 Nov 2024 pada 09.38
+-- Waktu pembuatan: 02 Des 2024 pada 03.05
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -53,28 +53,6 @@ CREATE TABLE `penjualan` (
   `nama` varchar(60) NOT NULL,
   `stok` varchar(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `penjualan`
---
-
-INSERT INTO `penjualan` (`id_penjualan`, `tanggal`, `nama`, `stok`) VALUES
-(1, '2004-10-18', 'kanzler', '12'),
-(2, '2004-10-18', 'yuppy', '34'),
-(3, '2004-10-18', 'kanzler', '2'),
-(4, '2004-10-18', 'chiki', '56'),
-(5, '2004-10-18', 'keju', '32'),
-(6, '2004-10-18', 'kanzler', '1'),
-(7, '2004-10-18', 'kaff', '66'),
-(8, '2004-10-18', 'rex', '120'),
-(9, '2004-10-20', 'rex', '23'),
-(10, '2004-10-20', 'yuppy', '43'),
-(11, '2004-10-20', 'rex', '1'),
-(12, '2004-10-20', 'chiki', '243'),
-(13, '2004-10-20', 'keju', '54'),
-(14, '2004-10-20', 'rex', '23'),
-(15, '2004-10-20', 'kaff', '12'),
-(16, '2004-10-20', 'rex', '12');
 
 -- --------------------------------------------------------
 
@@ -161,19 +139,19 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT untuk tabel `penjualan`
 --
 ALTER TABLE `penjualan`
-  MODIFY `id_penjualan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_penjualan` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `produk`
 --
 ALTER TABLE `produk`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT untuk tabel `promosi`
 --
 ALTER TABLE `promosi`
-  MODIFY `id_promosi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id_promosi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

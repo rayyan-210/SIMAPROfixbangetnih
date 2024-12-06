@@ -29,9 +29,7 @@ $produk = query("SELECT * FROM produk");
                     <div class="flex space-x-10">
                         <a href="admin_chart.php" class="text-gray-300 hover:text-amber-300 px-3 py-2 rounded-md text-xl font-medium transition duration-150">Chart</a>
                         <a href="#" class="text-white underline underline-offset-8 px-3 py-2 rounded-md text-xl font-medium" aria-current="page">Catalog</a>
-                        <a href="admin_image.php" class="text-gray-300 hover:text-amber-300 px-3 py-2 rounded-md text-xl font-medium">Image</a>
-                        <a href="admin_history.php"
-                            class="text-gray-300 hover:text-amber-300 px-3 py-2 rounded-md text-xl font-medium">History</a>
+                        <a href="admin_image.php" class="text-gray-300 hover:text-amber-300 px-3 py-2 rounded-md text-xl font-medium transition duration-150">Image</a>
                     </div>
                 </div>
                 <div class="flex items-center">
@@ -104,9 +102,10 @@ $produk = query("SELECT * FROM produk");
                                 onclick="window.location.href='admin_catalog_update.php?id=<?= $row['id'] ?>'">
                             <span class="mr-2">✏️</span> Edit
                         </button>
-                        <button class="flex-1 bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition duration-150 flex items-center justify-center"
-                                onclick="deleteProduct(<?= $row['id'] ?>)">
-                            <span class="mr-2">🗑️</span> Delete
+                        <button 
+                        class="flex-1 bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition duration-150 flex items-center justify-center"
+                        onclick="hapusproduk(<?= $row['id'] ?>)">
+                        <span class="mr-2">🗑️</span> Delete
                         </button>
                     </div>
                 </div>

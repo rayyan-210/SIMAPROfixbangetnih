@@ -34,8 +34,6 @@ require_once 'database.php';
                         <a href="#"
                             class="text-white underline underline-offset-8 px-3 py-2 rounded-md text-xl font-medium"
                             aria-current="page">Image</a>
-                        <a href="admin_history.php"
-                            class="text-gray-300 hover:text-amber-300 px-3 py-2 rounded-md text-xl font-medium">History</a>
                     </div>
                 </div>
                 <div class="flex items-center">
@@ -50,33 +48,30 @@ require_once 'database.php';
 
     <!--action-->
     <?php
-$sql = "SELECT id_promosi, gambar FROM promosi";
-$result = mysqli_query($conn, $sql);
+   $sql = "SELECT id_promosi, gambar FROM promosi";
+   $result = mysqli_query($conn, $sql);
+    
+    while ($row = mysqli_fetch_assoc($result)) :
+    ?>
+        <div class="flex justify-center items-center mt-16 ">
+            <div class="bg-slate-100  rounded-lg p-8 max-w-xl w-full flex flex-row mx-auto items-center">
+                <div class="flex justify-center items-center mb-4 mr-8">
+                    <img src="AsetFoto/carousel/<?php echo $row["gambar"]; ?>" alt="Deskripsi Gambar" class="object-fill">
+                </div>
+                <div class="flex space-x-4 mt-4">
+                    <button class="flex flex-col items-center text-black hover:text-red-500"
+                        onclick="showdel(<?php echo $row['id_promosi']; ?>)">
+                        <i class='bx bx-trash'></i>
+                        <span>Delete Image</span>
+                    </button>
+                    <button class="flex flex-col items-center text-black hover:text-green-500" onclick="showadd()">
+                        <i class='bx bx-image-add'></i>
+                        <span>Upload Image</span>
+                    </button>
+                </div>
+            </div>
+        </div><?php endwhile; ?>
 
-while ($row = mysqli_fetch_assoc($result)) {
-?>
-    <div class="flex justify-center items-center mt-16 ">
-        <div class="bg-slate-100 rounded-lg p-8 max-w-xl w-full flex flex-row mx-auto items-center">
-            <div class="flex justify-center items-center mb-4 mr-8">
-                <img src="AsetFoto/carousel/<?php echo htmlspecialchars($row["gambar"]); ?>" alt="Deskripsi Gambar" class="object-fill">
-            </div>
-            <div class="flex space-x-4 mt-4">
-                <button class="flex flex-col items-center text-black hover:text-red-500"
-                    onclick="showdel(<?php echo $row['id_promosi']; ?>)">
-                    <i class='bx bx-trash'></i>
-                    <span>Delete Image</span>
-                </button>
-                <button class="flex flex-col items-center text-black hover:text-green-500"
-                    data-id="<?php echo $row['id_promosi']; ?>" onclick="showadd(this)">
-                    <i class="bx bx-image-add"></i>
-                    <span>Upload Image</span>
-                </button>
-            </div>
-        </div>
-    </div>
-<?php 
-} 
-?>
 
     <div class="flex justify-center items-center mt-16 ">
         <div

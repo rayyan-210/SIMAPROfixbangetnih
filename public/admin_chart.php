@@ -1,5 +1,5 @@
 <?php
-require_once 'Database.php';
+require_once 'database.php';
 ?>
 
 <!DOCTYPE html>
@@ -34,8 +34,6 @@ require_once 'Database.php';
                             class="text-gray-300 hover:text-amber-300 px-3 py-2 rounded-md text-xl font-medium">Catalog</a>
                         <a href="admin_image.php"
                             class="text-gray-300 hover:text-amber-300 px-3 py-2 rounded-md text-xl font-medium">Image</a>
-                        <a href="admin_history.php"
-                            class="text-gray-300 hover:text-amber-300 px-3 py-2 rounded-md text-xl font-medium">History</a>
                     </div>
                 </div>
                 <div class="flex items-center">
@@ -72,36 +70,23 @@ require_once 'Database.php';
     </div>
 
     <!--promosi-->
-    
-<?php
-// Query untuk mengambil semua data dari tabel saran
-$result = $conn->query("SELECT * FROM saran");
 
-?>
-<div class="container mx-auto px-4 py-6">
-<div class="inline-flex bg-white border-2 border-black rounded-lg shadow-lg pr-6 ">
+    <div>
+        <div class="inline-flex bg-white border-2 border-black rounded-lg shadow-lg pr-6 ">
             <h2 class="text-lg font-bold mb-1 ml-2">Promosi</h2>
         </div>
-    <div class="bg-slate-100 rounded-lg shadow-lg p-4">
-        <?php
-        if ($result->num_rows > 0) {
-            // Loop melalui setiap baris hasil query
-            while ($row = $result->fetch_assoc()) {
-                echo "
-                <div class='p-4 mb-4 bg-white rounded-lg shadow-md border border-gray-200'>
-                    <p class='text-sm font-semibold text-gray-700'><span class='font-bold'>Produk:</span> " . htmlspecialchars($row['nama']) . "</p>
-                    <p class='text-sm text-gray-600'><span class='font-bold'>Saran:</span> " . htmlspecialchars($row['saran']) . "</p>
-                    <p class='text-sm text-gray-600'><span class='font-bold'>Jumlah Terjual:</span> " . htmlspecialchars($row['jumlah_terjual']) . "</p>
-                </div>";
-            }
-        } else {
-            // Jika tidak ada data
-            echo "<div class='p-4 text-gray-700 bg-white rounded-lg shadow-md'>Tidak ada promosi yang tersedia.</div>";
-        }
-        ?>
+        <div class="flex-auto size-auto bg-slate-100 rounded-lg shadow-lg p-4">
+            <p class="text-gray-700">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsam quaerat voluptas nemo repellat a,
+                maiores ducimus eligendi. Exercitationem iusto assumenda repellat eveniet minima ipsa dignissimos,
+                sapiente beatae quos distinctio odio ratione enim expedita dolorum explicabo suscipit id quasi quam nisi
+                rerum porro quod possimus tempore. Accusamus dolorem ipsa dolore ea incidunt magni nemo pariatur unde
+                commodi quibusdam! Minima quos cum dicta et repudiandae iure officia ea qui consequatur beatae sapiente
+                magni aliquid maxime iusto ullam aperiam deleniti magnam, enim, est veniam repellendus, similique
+                accusantium molestias. Quisquam officiis, harum repellendus magnam quo dolore a eos earum optio velit
+                culpa explicabo qui. </p>
+        </div>
     </div>
-</div>
-
 </body>
 
 </html>

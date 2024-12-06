@@ -1,10 +1,17 @@
-<?php 
+<?php
 
 require 'Database.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    updateProduk();
+    exit;
+}
 
 $id = $_GET["id"];
 
 $produk = query("SELECT * FROM produk WHERE id = $id")[0];
+
+
 
 ?>
 <!DOCTYPE html>
@@ -24,7 +31,7 @@ $produk = query("SELECT * FROM produk WHERE id = $id")[0];
 
 <body>
     <!--navbar-->
-    <nav class="bg-red-800 shadow-lg">
+    <nav class="bg-red-800">
         <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex-shrink-0">
@@ -32,16 +39,14 @@ $produk = query("SELECT * FROM produk WHERE id = $id")[0];
                 </div>
                 <div class="hidden sm:block">
                     <div class="flex space-x-10">
-                        <a href="admin_chart.php" class="text-gray-300 hover:text-amber-300 px-3 py-2 rounded-md text-xl font-medium transition duration-150">Chart</a>
+                        <a href="admin_chart.php" class="text-gray-300 hover:text-amber-300 px-3 py-2 rounded-md text-xl font-medium">Chart</a>
                         <a href="#" class="text-white underline underline-offset-8 px-3 py-2 rounded-md text-xl font-medium" aria-current="page">Catalog</a>
                         <a href="admin_image.php" class="text-gray-300 hover:text-amber-300 px-3 py-2 rounded-md text-xl font-medium">Image</a>
-                        <a href="admin_history.php"
-                            class="text-gray-300 hover:text-amber-300 px-3 py-2 rounded-md text-xl font-medium">History</a>
                     </div>
                 </div>
                 <div class="flex items-center">
                     <a href="home_customer.php">
-                        <i class='bx bxs-user-circle text-4xl px-7 text-gray-300 hover:text-amber-300 transition duration-150'></i>
+                        <i class='bx bxs-user-circle text-4xl px-7 text-gray-300 hover:text-amber-300'></i>
                     </a>
                 </div>
             </div>
@@ -62,13 +67,14 @@ $produk = query("SELECT * FROM produk WHERE id = $id")[0];
                         <img id="imagePreview" class="max-w-full max-h-96 object-contain" src="AsetFoto/Catalog/<?= $produk['gambar']?>" alt="Preview">
                     </div>
                     <!-- Tombol Upload Gambar -->
-                    <button type="button" class="mt-4 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded" onclick="document.getElementById('imageUpload').click();">
+                    <button type="button" name="submit"class="mt-4 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded" onclick="document.getElementById('imageUpload').click();">
                         <i class="bx bx-upload"></i> Upload Gambar
                     </button>
                 </div>
 
                 <!-- Form Fields -->
                 <div class="flex-1 space-y-4">
+                        <input type="hidden" id="idProduk" value="<?= $produk["id"]; ?>">
                     <div class="w-72">
                         <label for="kodeProduk" class="block text-sm font-medium text-gray-700">Kode Produk</label>
                         <input type="text" id="kodeProduk" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" placeholder="Kode Produk" value="<?= $produk["kodeproduk"]?>">

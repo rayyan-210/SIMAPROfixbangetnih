@@ -1,3 +1,13 @@
+<?php 
+require 'Database.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kodeProduk'], $_POST['namaProduk'], $_FILES['file'])) {
+    uploadProduk();
+    exit;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
