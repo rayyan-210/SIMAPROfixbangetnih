@@ -84,110 +84,74 @@ function getRandomColor() {
   return color;
 }
 
-// alert tambah
-function showadd(element) {
-    const id_promosi = element.getAttribute('data-id'); // Ambil ID dari atribut data
-
-    Swal.fire({
-        title: 'Update Upload Status',
-        text: 'Apakah Anda ingin upload foto ini ke homepage?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, update!',
-        cancelButtonText: 'Batal'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Kirim permintaan untuk mengupdate status upload
-            fetch('Database.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id: id_promosi }) // Gunakan ID yang diambil dari tombol
-            })
-                .then(response => response.json())
-                .then(data => {
-                    // Tampilkan pesan yang relevan kepada pengguna
-                    if (data.success) {
-                        Swal.fire({
-                            title: 'SUCCESS!',
-                            text: 'Status upload berhasil diupdate!',
-                            icon: 'success'
-                        }).then(() => {
-                            // Reload halaman setelah sukses
-                            setTimeout(() => {
-                                location.reload();
-                            }, 700);
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'ERROR!',
-                            text: 'Gagal mengupdate status upload.',
-                            icon: 'error'
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    Swal.fire({
-                      title: 'SUCCESS!',
-                      text: 'Status upload berhasil diupdate!',
-                      icon: 'success'
-                  }).then(() => {
-                            // Reload halaman setelah sukses
-                            setTimeout(() => {
-                                location.reload();
-                            }, 700);
-                        });
-                });
-        } else {
-            console.log("Pengguna membatalkan");
+//alert tambah
+function showadd(isButtonA) {
+  Swal.fire({
+    title: "TAMBAH?",
+    text: "Data akan ditambahkan",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Ya, tambah aja!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: "SUCCESS!",
+        text: "BERHASIL!",
+        icon: "success",
+      }).then(() => {
+        if (isButtonA) {
+          window.location.href = "admin_catalog.php";
         }
-    });
+      });
+    } else {
+      console.log("Pengguna membatalkan");
+    }
+  });
 }
 
 //alert hapus
 function showdel(id) {
-    Swal.fire({
-        title: "HAPUS?",
-        text: "Yakin ingin dihapus!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Ya, hapus saja!"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Lakukan AJAX untuk menghapus data
-            fetch(`Database.php?id=${id}`, {
-                method: 'GET'
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            title: "Deleted!",
-                            text: "Berhasil dihapus!",
-                            icon: "success"
-                        })
-                    } else {
-                        Swal.fire("Gagal", data.message || "Gagal menghapus gambar", "error");
-                    }
-                }).then(data => {
-                    Swal.close(); // Close loading
-                    Swal.fire("success", "Berhasil menghapus gambar dari database", "success").then(() => {
-
-                        setTimeout(() => {
-                            location.reload();
-                        }, 700);
-                    });
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-
-                });
-        }
-    });
+  Swal.fire({
+    title: "HAPUS?",
+    text: "Yakin ingin dihapus!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Ya, hapus saja!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Lakukan AJAX untuk menghapus data
+      fetch(`admin_image_hapus.php?id=${id}`, {
+        method: "GET",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            Swal.fire({
+              title: "Deleted!",
+              text: "Berhasil dihapus!",
+              icon: "success",
+            });
+          } else {
+            Swal.fire("Gagal", data.message || "Gagal menghapus gambar", "error");
+          }
+        })
+        .then((data) => {
+          Swal.close(); // Close loading
+          Swal.fire("success", "Berhasil menghapus gambar dari database", "success").then(() => {
+            setTimeout(() => {
+              location.reload();
+            }, 700);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  });
 }
 
 // alert input gambar
@@ -201,48 +165,46 @@ async function inputgambar() {
     },
   });
 
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-            const result = await Swal.fire({
-                title: "Your uploaded picture",
-                imageUrl: e.target.result,
-                imageAlt: "The uploaded picture",
-                showCancelButton: true,
-                confirmButtonText: 'Save',
-                cancelButtonText: 'Cancel'
-            });
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const result = await Swal.fire({
+        title: "Your uploaded picture",
+        imageUrl: e.target.result,
+        imageAlt: "The uploaded picture",
+        showCancelButton: true,
+        confirmButtonText: "Save",
+        cancelButtonText: "Cancel",
+      });
 
-            if (result.isConfirmed) {
-                let formData = new FormData();
-                formData.append("file", file);
-                formData.append("uploadType", "image");
+      if (result.isConfirmed) {
+        let formData = new FormData();
+        formData.append("file", file);
+        formData.append("uploadType", "image");
 
-                fetch("Database.php", {
-                    method: "POST",
-                    body: formData
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok: ' + response.statusText);
-
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        Swal.close(); // Close loading
-                        Swal.fire("success", "gambar berhasil masuk kedalam database", "success").then(() => {
-                            setTimeout(() => {
-                                location.reload();
-                            }, 700);
-                        });
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                    });
+        fetch("Database.php", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok: " + response.statusText);
             }
             return response.json();
-          }
+          })
+          .then((data) => {
+            Swal.close(); // Close loading
+            Swal.fire("success", "gambar berhasil masuk kedalam database", "success").then(() => {
+              setTimeout(() => {
+                location.reload();
+              }, 700);
+            });
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+    };
 
     reader.readAsDataURL(file);
   } else {
@@ -305,134 +267,52 @@ async function inputdata() {
   }
 }
 
-
 // alert hapus dan save
 function showdelinfo() {
   Swal.fire({
     title: "DELETE?",
     text: "Apakah ingin menyimpan data ke dalam history?",
-    icon: 'warning',
+    icon: "warning",
     showDenyButton: true,
     showCancelButton: true,
     confirmButtonText: "Delete and Save",
-    denyButtonText: `Delete and Don't save`
-}).then((result) => {
+    denyButtonText: `Delete and Don't save`,
+  }).then((result) => {
     if (result.isConfirmed) {
-        // Jika pengguna mengkonfirmasi "Delete and Save"
-        fetch('Database.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'aksi=simpan_ke_history'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                // Jika penyimpanan ke history berhasil, hapus data dari tabel penjualan
-                return fetch('Database.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'aksi=hapus_semua'
-                });
-            } else {
-                Swal.fire({
-                    title: "Gagal!",
-                    text: data.pesan,
-                    icon: "error"
-                });
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data && data.status === 'success') {
-                Swal.fire("Success", "Data telah disimpan ke history dan dihapus!", "success").then(() => {
-                    setTimeout(() => location.reload(), 700);
-                });
-            } else {
-                Swal.fire({
-                    title: "Gagal!",
-                    text: data.pesan,
-                    icon: "error"
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            Swal.fire({
-                title: "Error!",
-                text: "Terjadi kesalahan saat menghapus data",
-                icon: "error"
-            });
-        });
-        
+      Swal.fire("Saved!", "", "success");
     } else if (result.isDenied) {
-        fetch('Database.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'aksi=hapus_semua'
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    Swal.fire("Success", "Data telah terhapus!", "success").then(() => {
-                        setTimeout(() => location.reload(), 700);
-                    });
-                } else {
-                    Swal.fire({
-                        title: "Gagal!",
-                        text: data.pesan,
-                        icon: "error"
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire({
-                    title: "Error!",
-                    text: "Terjadi kesalahan saat menghapus data",
-                    icon: "error"
-                });
+      fetch("Database.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: "aksi=hapus_semua",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "success") {
+            Swal.fire("Success", "Data telah terhapus!", "success").then(() => {
+              setTimeout(() => location.reload(), 700);
             });
+          } else {
+            Swal.fire({
+              title: "Gagal!",
+              text: data.pesan,
+              icon: "error",
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          Swal.fire({
+            title: "Error!",
+            text: "Terjadi kesalahan saat menghapus data",
+            icon: "error",
+          });
+        });
     }
-});
+  });
 }
-
-// slide homepage
-(function() {
-  let currentSlide = 0;
-  const slides = document.querySelectorAll('.slide');
-  const totalSlides = slides.length;
-
-  function showSlide(index) {
-      slides.forEach((slide, i) => {
-          slide.style.display = (i === index) ? 'block' : 'none';
-      });
-      
-  }
-
-  function nextSlide() {
-      currentSlide = (currentSlide + 1) % totalSlides;
-      showSlide(currentSlide);
-  }
-
-  function prevSlide() {
-      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-      showSlide(currentSlide);
-  }
-
-
-
-  // Expose nextSlide and prevSlide to the window
-  window.nextSlide = nextSlide;
-  window.prevSlide = prevSlide;
-})();
-
-
 
 const SIMAPRO = (() => {
   // Fungsi untuk menampilkan pratinjau gambar sebelum di-upload
@@ -470,7 +350,7 @@ const SIMAPRO = (() => {
     formData.append("jenisProduk", jenisProduk);
     formData.append("harga", harga);
 
-    fetch("Database.php", {
+    fetch("admin_catalog_input.php", {
       method: "POST",
       body: formData,
     })
@@ -495,6 +375,73 @@ const SIMAPRO = (() => {
   };
 })();
 
+const SIMAPRO_update = (() => {
+  // Fungsi untuk menampilkan pratinjau gambar sebelum di-upload
+  const previewImage = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const previewElement = document.getElementById("imagePreview");
+        previewElement.src = reader.result;
+        previewElement.style.display = "block"; // Menampilkan gambar
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Fungsi untuk submit form dan upload data ke server
+  const submitForm = () => {
+    const kodeProduk = document.getElementById("kodeProduk").value;
+    const namaProduk = document.getElementById("namaProduk").value;
+    const jenisProduk = document.getElementById("jenisProduk").value;
+    const harga = document.getElementById("harga").value;
+    const fileInput = document.getElementById("imageUpload");
+    const file = fileInput.files[0];
+    const idProduk = document.getElementById("idProduk").value;
+
+    if (!kodeProduk || !namaProduk || !jenisProduk || !harga) {
+      Swal.fire("Error", "Semua kolom harus diisi", "error");
+      return;
+    }
+
+    let formData = new FormData();
+    formData.append("id", idProduk);
+    formData.append("kodeProduk", kodeProduk);
+    formData.append("namaProduk", namaProduk);
+    formData.append("jenisProduk", jenisProduk);
+    formData.append("harga", harga);
+    if (file) {
+      formData.append("file", file);
+    } else {
+      formData.append("file", "null"); // Menandai bahwa gambar tidak diupdate
+    }
+
+    fetch("admin_catalog_update.php", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          Swal.fire("Success", "Produk berhasil diperbarui", "success").then(() => {
+            window.location.href = "admin_catalog.php";
+          });
+        } else {
+          Swal.fire("Error", data.message, "error");
+        }
+      })
+      .catch((error) => {
+        Swal.fire("Error", "Terjadi kesalahan saat memperbarui produk", "error");
+      });
+  };
+
+  return {
+    previewImage,
+    submitForm,
+  };
+})();
+
 function hapusproduk(id) {
   Swal.fire({
     title: "HAPUS?",
@@ -507,25 +454,28 @@ function hapusproduk(id) {
   }).then((result) => {
     if (result.isConfirmed) {
       // Lakukan AJAX untuk menghapus data menggunakan fetch API
-      fetch(`hapus_produk.php?id=${id}`, {
-        // Mengarah ke file utama
+      fetch(`admin_catalog_hapus.php?id=${id}`, {
         method: "GET",
       })
-        .then((response) => response.json())
+        .then((response) => response.json()) // Konversi respons ke JSON
         .then((data) => {
           if (data.success) {
+            // Jika sukses
             Swal.fire({
-              title: "Deleted!",
-              text: "Berhasil dihapus!",
+              title: "Terhapus!",
+              text: data.message,
               icon: "success",
             }).then(() => {
-              // Setelah berhasil dihapus, hilangkan elemen produk dari halaman
+              // Hilangkan elemen produk dari halaman
               var productElement = document.getElementById("product-" + id);
               if (productElement) {
-                productElement.remove(); // Menghapus elemen produk dari DOM
+                productElement.remove();
               }
+              // Redirect jika ingin kembali ke halaman tertentu
+              window.location.href = "admin_catalog.php";
             });
           } else {
+            // Jika gagal
             Swal.fire("Gagal", data.message || "Gagal menghapus produk", "error");
           }
         })
@@ -535,78 +485,4 @@ function hapusproduk(id) {
         });
     }
   });
-}
-
-const SIMAPRO_update = {
-  previewImage: function (event) {
-    const reader = new FileReader();
-    reader.onload = function () {
-      const output = document.getElementById("imagePreview");
-      output.src = reader.result;
-      output.style.display = "block";
-    };
-    reader.readAsDataURL(event.target.files[0]);
-  },
-
-  submitForm: function () {
-    const formData = new FormData();
-    formData.append("id", '<?= $produk["id"] ?>'); // Ambil ID produk yang ingin diperbarui
-    formData.append("kodeProduk", document.getElementById("kodeProduk").value);
-    formData.append("namaProduk", document.getElementById("namaProduk").value);
-    formData.append("jenisProduk", document.getElementById("jenisProduk").value);
-    formData.append("harga", document.getElementById("harga").value);
-    formData.append("oldImage", '<?= $produk["gambar"] ?>'); // Gambar lama
-    const imageUpload = document.getElementById("imageUpload");
-    if (imageUpload.files[0]) {
-      formData.append("imageUpload", imageUpload.files[0]); // Gambar baru jika ada
-    }
-
-    // Kirim data ke backend menggunakan AJAX
-    fetch("update_produk.php", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === "success") {
-          Swal.fire({
-            title: "Sukses!",
-            text: data.message,
-            icon: "success",
-            confirmButtonText: "OK",
-          }).then(() => {
-            window.location.href = "admin_catalog.php"; // Redirect setelah sukses
-          });
-        } else {
-          Swal.fire({
-            title: "Error!",
-            text: data.message,
-            icon: "error",
-            confirmButtonText: "OK",
-          });
-        }
-      })
-      .catch((error) => {
-        Swal.fire({
-          title: "Error!",
-          text: "Terjadi kesalahan jaringan.",
-          icon: "error",
-          confirmButtonText: "OK",
-        });
-      });
-  },
-};
-
-function sendToWhatsApp(id, nama, harga) {
-  // Nomor WhatsApp admin
-  const adminPhone = "6281221529676"; 
-  
-  // Pesan WhatsApp
-  const message = `Halo, saya ingin membeli produk berikut ${nama}\n dengan Harga: Rp ${harga.toLocaleString('id-ID')}\n\nTerima kasih.`;
-
-  // Buat tautan WhatsApp
-  const waLink = `https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`;
-
-  // Arahkan pengguna ke tautan WhatsApp
-  window.open(waLink, '_blank');
 }
